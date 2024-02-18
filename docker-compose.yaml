@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: php_app_template_php
+    restart: unless-stopped
+    tty: true
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./:/app
+    working_dir: /app
