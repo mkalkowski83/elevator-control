@@ -12,10 +12,10 @@
     "bin-dir": "bin"
   },
   "autoload": {
-    "psr-4": { "MovieRecommendation\\" : "src/" }
+    "psr-4": { "ElevatorControl\\" : "src/" }
   },
   "autoload-dev": {
-    "psr-4": { "MovieRecommendation\\Test\\" : "tests/" }
+    "psr-4": { "ElevatorControl\\Test\\" : "tests/" }
   },
   "require-dev": {
     "phpunit/phpunit": "^10.5",

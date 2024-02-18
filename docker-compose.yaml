@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   php:
-    container_name: php_app_template_php
+    container_name: php_elevator_control_php
     restart: unless-stopped
     tty: true
     build:
