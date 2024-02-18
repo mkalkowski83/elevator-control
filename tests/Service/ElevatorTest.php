@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ElevatorControl\Test\Service;
 
+use ElevatorControl\Exception\CannotMoveToHigherFloorThenMax;
+use ElevatorControl\Exception\CannotMoveToLoweFloorThenMin;
 use ElevatorControl\Exception\ElevatorIsOnTheTopFloor;
 use ElevatorControl\Exception\ElevatorIsOnTheGroundFloor;
 use ElevatorControl\Service\Elevator;
@@ -96,5 +98,39 @@ final class ElevatorTest extends TestCase
 
         // Then
         $this->assertSame(5, $elevator->currentFloor());
+    }
+
+    /**
+     * @test
+     */
+    public function should_not_move_to_lower_floor_then_min(): void
+    {
+        // Given
+        $groundFloor = 0;
+        $lastFloor = 12;
+        $elevator = new Elevator($groundFloor, $lastFloor);
+
+        // Expect
+        $this->expectException(CannotMoveToLoweFloorThenMin::class);
+
+        // When
+        $elevator->moveToFloor(-1);
+    }
+
+    /**
+     * @test
+     */
+    public function should_not_move_to_higher_floor_then_max(): void
+    {
+        // Given
+        $groundFloor = 0;
+        $lastFloor = 12;
+        $elevator = new Elevator($groundFloor, $lastFloor);
+
+        // Expect
+        $this->expectException(CannotMoveToHigherFloorThenMax::class);
+
+        // When
+        $elevator->moveToFloor(13);
     }
 }

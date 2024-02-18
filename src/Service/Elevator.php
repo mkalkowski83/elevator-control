@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ElevatorControl\Service;
 
+use ElevatorControl\Exception\CannotMoveToLoweFloorThenMin;
+use ElevatorControl\Exception\CannotMoveToHigherFloorThenMax;
 use ElevatorControl\Exception\ElevatorIsOnTheGroundFloor;
 use ElevatorControl\Exception\ElevatorIsOnTheTopFloor;
 
@@ -40,11 +42,11 @@ final class Elevator
     public function moveToFloor(int $floor): void
     {
         if ($floor < $this->minFloor) {
-            throw ElevatorIsOnTheGroundFloor::create();
+            throw CannotMoveToLoweFloorThenMin::create();
         }
 
         if ($floor > $this->maxFloor) {
-            throw ElevatorIsOnTheTopFloor::create();
+            throw CannotMoveToHigherFloorThenMax::create();
         }
 
         $this->currentFloor = $floor;
