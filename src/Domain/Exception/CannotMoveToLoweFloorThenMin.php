@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ElevatorControl\Exception;
+namespace ElevatorControl\Domain\Exception;
 
 final class CannotMoveToLoweFloorThenMin extends \DomainException
 {

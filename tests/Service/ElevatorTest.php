@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace ElevatorControl\Test\Service;
 
-use ElevatorControl\Exception\CannotMoveToHigherFloorThenMax;
-use ElevatorControl\Exception\CannotMoveToLoweFloorThenMin;
-use ElevatorControl\Exception\ElevatorIsOnTheTopFloor;
-use ElevatorControl\Exception\ElevatorIsOnTheGroundFloor;
-use ElevatorControl\Service\Elevator;
+use ElevatorControl\Domain\Model\Building;
+use ElevatorControl\Domain\Model\Elevator;
+use ElevatorControl\Domain\Exception\CannotMoveToHigherFloorThenMax;
+use ElevatorControl\Domain\Exception\CannotMoveToLoweFloorThenMin;
+use ElevatorControl\Domain\Exception\ElevatorIsOnTheTopFloor;
+use ElevatorControl\Domain\Exception\ElevatorIsOnTheGroundFloor;
+use ElevatorControl\Domain\Model\Floor;
+use ElevatorControl\Domain\Service\ElevatorControl;
 use PHPUnit\Framework\TestCase;
 
 final class ElevatorTest extends TestCase
@@ -15,122 +18,51 @@ final class ElevatorTest extends TestCase
     /**
      * @test
      */
-    public function should_move_up_one_flor(): void
+    public function should_move_to_floor(): void
     {
         //Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
+        // got to specify floor
+        $elevatorControl = new ElevatorControl();
 
         //When
-        $elevator->up();
+        $elevator = new Elevator(new Building(Floor::GARAGE, Floor::GROUND_FLOOR, Floor::FIRST_FLOOR, Floor::SECOND_FLOOR));
+        $elevatorControl->goToFloor($elevator, Floor::FIRST_FLOOR);
 
         //Then
-        $this->assertSame(1, $elevator->currentFloor());
+        $this->assertSame(Floor::FIRST_FLOOR, $elevator->currentFloor);
     }
 
     /**
      * @test
      */
-    public function should_move_down_one_flor(): void
+    public function should_move_up_one_floor(): void
     {
         //Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
+        // got to specify floor
+        $elevatorControl = new ElevatorControl();
 
         //When
-        $elevator->moveToFloor(1);
-        $elevator->down();
+        $elevator = new Elevator(new Building(Floor::GARAGE, Floor::GROUND_FLOOR, Floor::FIRST_FLOOR, Floor::SECOND_FLOOR));
+        $elevatorControl->up($elevator);
 
         //Then
-        $this->assertSame(0, $elevator->currentFloor());
+        $this->assertSame(Floor::FIRST_FLOOR, $elevator->currentFloor);
     }
 
     /**
      * @test
      */
-    public function should_not_move_down_when_already_on_the_ground_floor(): void
+    public function should_move_down_one_floor(): void
     {
-        // Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
+        //Given
+        // got to specify floor
+        $elevatorControl = new ElevatorControl();
 
-        // Expect
-        $this->expectException(ElevatorIsOnTheGroundFloor::class);
-        $this->assertSame(0, $elevator->currentFloor());
+        //When
+        $elevator = new Elevator(new Building(Floor::GARAGE, Floor::GROUND_FLOOR, Floor::FIRST_FLOOR, Floor::SECOND_FLOOR));
+        $elevatorControl->down($elevator);
 
-        // When
-        $elevator->down();
-    }
-
-    /**
-     * @test
-     */
-    public function should_not_move_up_when_already_on_the_top_floor(): void
-    {
-        // Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
-
-        // Expect
-        $elevator->moveToFloor(12);
-        $this->expectException(ElevatorIsOnTheTopFloor::class);
-
-        // When
-        $elevator->up();
-    }
-
-    /**
-     * @test
-     */
-    public function should_move_to_direct_floor(): void
-    {
-        // Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
-
-        // When
-        $elevator->moveToFloor(5);
-
-        // Then
-        $this->assertSame(5, $elevator->currentFloor());
-    }
-
-    /**
-     * @test
-     */
-    public function should_not_move_to_lower_floor_then_min(): void
-    {
-        // Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
-
-        // Expect
-        $this->expectException(CannotMoveToLoweFloorThenMin::class);
-
-        // When
-        $elevator->moveToFloor(-1);
-    }
-
-    /**
-     * @test
-     */
-    public function should_not_move_to_higher_floor_then_max(): void
-    {
-        // Given
-        $groundFloor = 0;
-        $lastFloor = 12;
-        $elevator = new Elevator($groundFloor, $lastFloor);
-
-        // Expect
-        $this->expectException(CannotMoveToHigherFloorThenMax::class);
-
-        // When
-        $elevator->moveToFloor(13);
+        //Then
+        $this->assertSame(Floor::FIRST_FLOOR, $elevator->currentFloor);
     }
 }
